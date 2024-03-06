@@ -1,0 +1,24 @@
+{
+  "name": "warp",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler dev src/index.ts",
+    "deploy": "wrangler deploy --minify src/index.ts",
+    "test": "jest --verbose"
+  },
+  "dependencies": {
+    "hono": "^4.0.10"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240222.0",
+    "@types/jest": "^29.5.12",
+    "esbuild": "^0.20.1",
+    "esbuild-jest": "^0.5.0",
+    "jest": "^29.7.0",
+    "jest-environment-miniflare": "^2.14.2",
+    "miniflare": "^3.20240223.1",
+    "ts-node": "^10.9.2",
+    "wrangler": "^3.31.0"
+  }
+}

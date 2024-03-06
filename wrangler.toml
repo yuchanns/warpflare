@@ -1,0 +1,15 @@
+name = "warp"
+main = "src/index.ts"
+compatibility_date = "2023-08-23"
+
+[[d1_databases]]
+name = "warp-db"
+binding = "DATABASE"
+database_id = "4ca7dbc7-74ff-42be-9f86-965dfed62ad7"
+
+[placement]
+mode = "smart"
+
+[triggers]
+crons = [ ]
+

@@ -32,8 +32,8 @@ export const getCurrentAccount = async ({ DATABASE: DB }: Bindings) => {
     return account
   }
   console.log("No account found, register a new one")
-  const pair = generateWireguardKeys()
-  const result = await register(pair.pubKey)
+  const { pubKey, privKey } = generateWireguardKeys()
+  const result = await register(pubKey)
   account = {
     account_id: result.account.id,
     account_type: result.type,
@@ -41,7 +41,7 @@ export const getCurrentAccount = async ({ DATABASE: DB }: Bindings) => {
     updated_at: result.account.updated,
     model: result.model,
     referrer: "",
-    private_key: pair.privKey,
+    private_key: privKey,
     license_key: result.account.license,
     token: result.token,
     premium_data: result.account.premium_data,

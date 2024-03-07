@@ -1,9 +1,9 @@
 import { generateKeyPair } from '@stablelib/x25519'
 
 export const generateWireguardKeys = () => {
-  const pair = generateKeyPair()
+  const { publicKey, secretKey } = generateKeyPair()
   return {
-    pubKey: btoa(String.fromCharCode(...pair.publicKey)),
-    privKey: btoa(String.fromCharCode(...pair.secretKey)),
+    pubKey: btoa(String.fromCharCode(...publicKey)),
+    privKey: btoa(String.fromCharCode(...secretKey)),
   }
 }

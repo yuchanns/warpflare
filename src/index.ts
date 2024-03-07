@@ -1,4 +1,4 @@
-import app, { Env } from "./app";
+import app, { Env } from "./server";
 
 export default {
   fetch: app.fetch,

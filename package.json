@@ -8,6 +8,8 @@
     "test": "jest --verbose"
   },
   "dependencies": {
+    "@stablelib/x25519": "^1.0.3",
+    "drizzle-orm": "^0.29.5",
     "hono": "^4.0.10"
   },
   "devDependencies": {

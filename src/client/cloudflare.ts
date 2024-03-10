@@ -15,27 +15,29 @@ export type RegisterData = {
   referrer: string | undefined
 }
 
+export type Account = {
+  id: string,
+  account_type: string,
+  created: string,
+  updated: string,
+  premium_data: number,
+  quota: number | undefined,
+  usage: number | undefined,
+  warp_plus: boolean,
+  referral_count: number,
+  referral_renewal_countdown: number,
+  role: string,
+  license: string,
+  ttl: string,
+}
+
 export type RegisterResult = {
   id: string,
   type: string,
   model: string,
   key: string,
   token: string,
-  account: {
-    id: string,
-    account_type: string,
-    created: string,
-    updated: string,
-    premium_data: number,
-    quota: number,
-    usage: number,
-    warp_plus: boolean,
-    referral_count: number,
-    referral_renewal_countdown: number,
-    role: string,
-    license: string,
-    ttl: string,
-  },
+  account: Account,
 }
 
 const _register = async (data: RegisterData) => {
@@ -78,4 +80,28 @@ export const register = async (
   } satisfies RegisterData
   const { result } = await _register(data)
   return result
+}
+
+export type GetAccountResult = {
+  account: Account
+}
+
+export const getAccount = async (
+  accountId: string, token: string,
+) => {
+  const u = new URL(`${API_URL}/${API_VERSION}/reg/${accountId}`)
+  const r = new Request(u, {
+    method: "GET",
+    headers: {
+      "Authorization": `Bearer ${token}`,
+    }
+  })
+  const response = await fetch(r)
+  if (!response.ok) {
+    throw Error(response.statusText)
+  }
+  const { result: { account } } = await response.json() as {
+    result: GetAccountResult,
+  }
+  return account
 }

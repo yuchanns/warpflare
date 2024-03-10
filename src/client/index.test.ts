@@ -1,4 +1,4 @@
-import { generateWireguardKeys, register } from "./index"
+import { generateWireguardKeys, getAccount, register } from "./index"
 
 describe("wireguard", () => {
   test("generateWireguardKeys", async () => {
@@ -12,6 +12,11 @@ describe("cloudflare", () => {
   test("register", async () => {
     const { pubKey } = generateWireguardKeys()
     const result = await register(pubKey)
+    console.log("register")
     console.log(result)
+    const { id, token } = result
+    const info = await getAccount(id, token)
+    console.log("getAccount")
+    console.log(info)
   })
 })

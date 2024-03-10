@@ -1,11 +1,11 @@
 import { Hono } from 'hono'
-import { getCurrentAccount } from '../client/repo'
+import { getCurrentAccount, saveAccount } from '../client/repo'
 import { Env } from '.'
-import { generateWireguardKeys, register } from '../client'
+import { generateWireguardKeys, getAccount, register } from '../client'
 
 const app = new Hono<Env>()
 
-app.get('/add-data', async (c) => {
+app.post('/add-data', async (c) => {
   const account = await getCurrentAccount(c.env)
   console.log(`WORK ON ID: ${account.account_id}`)
   try {
@@ -17,6 +17,15 @@ app.get('/add-data', async (c) => {
     return c.json('no')
   }
   console.log('Got account from Cloudflare')
+  return c.json('ok')
+})
+
+app.post('/save-account', async (c) => {
+  const account = await getCurrentAccount(c.env)
+  const info = await getAccount(account.account_id, account.token)
+  console.log(`Account info: ${JSON.stringify(info)}`)
+  console.log("Save account")
+  await saveAccount(c.env, Object.assign({}, account, info))
   return c.json('ok')
 })
 

@@ -6,11 +6,7 @@ export type Bindings = {
   DATABASE: D1Database
 }
 
-export type Env = {
-  Bindings: Bindings
-}
-
-const app = new Hono<Env>().use(logger())
+const app = new Hono<{ Bindings: Bindings }>().use(logger())
 
 app.get('/', (c) => c.text('Hello Warp'))
 

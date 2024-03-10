@@ -1,9 +1,9 @@
 import { Hono } from 'hono'
 import { getCurrentAccount, saveAccount } from '../client/repo'
-import { Env } from '.'
+import { Bindings } from '.'
 import { generateWireguardKeys, getAccount, register } from '../client'
 
-const app = new Hono<Env>()
+const app = new Hono<{ Bindings: Bindings }>()
 
 app.post('/add-data', async (c) => {
   const account = await getCurrentAccount(c.env)

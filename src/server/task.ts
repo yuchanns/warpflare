@@ -12,7 +12,8 @@ export const addData = async (env: Bindings) => {
   console.log(`WORK ON ID: ${account.account_id}`)
   try {
     const { pubKey } = generateWireguardKeys()
-    register(pubKey, account.account_id)
+    const result = await register(pubKey, account.account_id)
+    console.log(`Register info: ${JSON.stringify(result)}`)
   } catch (e) {
     console.error('Failed to get account from Cloudflare')
     console.error(e)

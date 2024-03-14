@@ -109,7 +109,7 @@ INSERT INTO IP (address, loss, delay, name, unique_name)
 VALUES
 \t${result.join(",\n\t")};
 
-COMMIT:`)
+COMMIT;`)
 }
 
 async function endpointyx() {

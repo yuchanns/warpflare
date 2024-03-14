@@ -1,17 +1,14 @@
 import { Bindings } from ".";
-import app from "./task";
+import { addData, save } from "./task";
 
-export const scheduled: ExportedHandlerScheduledHandler<{ Bindings: Bindings }> =
-  async (event, _env, _ctx) => {
+export const scheduled: ExportedHandlerScheduledHandler<Bindings> =
+  async (event, env, _ctx) => {
+    console.log(env)
     switch (event.cron) {
       case "* * * * *": // every minute
         try {
-          const resp = await app.request(`/add-data`)
-          if (resp.status != 200) {
-            console.error(`${resp.statusText}`)
-            return
-          }
-          console.log(`Trigger proceed: ${await resp.text()}`)
+          const ok = await addData(env)
+          console.log(`Trigger proceed: ${ok}`)
 
         } catch (e) {
           console.error(`Trigger panic: ${e}`)
@@ -19,12 +16,8 @@ export const scheduled: ExportedHandlerScheduledHandler<{ Bindings: Bindings }> 
         break
       case "*/3 * * * *": // every three minute
         try {
-          const resp = await app.request(`/save-account`)
-          if (resp.status != 200) {
-            console.error(`${resp.statusText}`)
-            return
-          }
-          console.log(`Trigger proceed: ${await resp.text()}`)
+          const ok = await save(env)
+          console.log(`Trigger proceed: ${ok}`)
         } catch (e) {
           console.error(`Trigger panic: ${e}`)
         }

@@ -5,7 +5,7 @@ export const scheduled: ExportedHandlerScheduledHandler<Bindings> =
   async (event, env, _ctx) => {
     console.log(env)
     switch (event.cron) {
-      case "* * * * *": // every minute
+      case "*/5 * * * *": // every five minute
         try {
           const ok = await addData(env)
           console.log(`Trigger proceed: ${ok}`)
@@ -14,7 +14,7 @@ export const scheduled: ExportedHandlerScheduledHandler<Bindings> =
           console.error(`Trigger panic: ${e}`)
         }
         break
-      case "*/3 * * * *": // every three minute
+      case "*/10 * * * *": // every ten minute
         try {
           const ok = await save(env)
           console.log(`Trigger proceed: ${ok}`)

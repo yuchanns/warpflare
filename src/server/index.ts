@@ -3,6 +3,7 @@ import { createMiddleware } from 'hono/factory'
 import { logger } from 'hono/logger'
 import task from './task'
 import sub from './sub'
+import { scheduled } from './scheduled'
 
 export type Bindings = {
   DATABASE: D1Database
@@ -33,4 +34,4 @@ app.get('/', (c) => c.text('Hello Warp'))
 app.route('/task', task)
 app.route('/sub', sub)
 
-export default app
+export default Object.assign({}, app, { scheduled })

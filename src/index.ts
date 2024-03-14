@@ -2,9 +2,6 @@ import app, { Bindings } from "./server";
 
 export default {
   fetch: app.fetch,
-  scheduled: async (event, env, ctx) => {
-    switch (event.cron) {
-    }
-  }
+  scheduled: app.scheduled,
 } satisfies ExportedHandler<{ Bindings: Bindings }>
 

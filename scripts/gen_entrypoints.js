@@ -20,7 +20,7 @@ const archAffix = () => {
     case "s390x":
       return "s390x"
     default:
-      console.log("Unsupported CPU Architecture!")
+      console.error("Unsupported CPU Architecture!")
       process.exit(1)
   }
 }
@@ -101,10 +101,15 @@ const processCsv = async () => {
       const uniqueName = generateUniqueName(emoji, isoCode)
       return `("${ip}", "${loss}", "${delay}", "${name}", "${uniqueName}")`
     })
-  fs.writeFileSync(`${cwd}/ip.sql`, `
+  fs.writeFileSync(`${cwd}/ip.sql`, `BEGIN TRANSACTION;
+
+DELETE FROM IP;
+
 INSERT INTO IP (address, loss, delay, name, unique_name)
 VALUES
-\t${result.join(",\n\t")};`)
+\t${result.join(",\n\t")};
+
+COMMIT:`)
 }
 
 async function endpointyx() {

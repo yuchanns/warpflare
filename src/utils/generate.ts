@@ -30,14 +30,12 @@ export const generateClash = (
   randomName: boolean,
   isAndroid: boolean,
 ) => {
-  const config = {
+  const config = Object.assign({}, {
     type: "wireguard",
     ip: "172.16.0.2",
     udp: true,
     mtu: 1280,
-    dns: isAndroid ? undefined :
-      ['1.1.1.1', '1.0.0.1'],
-  }
+  }, isAndroid ? {} : { dns: ['1.1.1.1', '1.0.0.1'] })
   const proxies = ips
     .map(({ ip: server, port, name, unique_name }) => ({
       name: randomName ? unique_name : name,
@@ -46,7 +44,7 @@ export const generateClash = (
       "private-key": privateKey,
       "public-key": CF_PUBLIC_KEY,
       "remote-dns-resolve": true,
-      ...config,
+      ...Object.assign({}, config),
     }))
   const clash = Object.assign({}, CLASH, { proxies })
   if (proxyFormat == ProxyFormat.Only) {

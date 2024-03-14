@@ -81,7 +81,7 @@ const tableIP = sqliteTable("IP", {
   loss: text("loss").notNull(),
   delay: text("delay").notNull(),
   name: text("name").notNull(),
-  unique_name: text("uniqueName").notNull()
+  unique_name: text("unique_name").notNull()
 })
 
 export const getIPv4All = async (

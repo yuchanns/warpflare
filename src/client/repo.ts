@@ -75,3 +75,30 @@ export const saveAccount = async (
     )
   return
 }
+
+const tableIP = sqliteTable("IP", {
+  address: text("address").primaryKey(),
+  loss: text("loss").notNull(),
+  delay: text("delay").notNull(),
+  name: text("name").notNull(),
+  unique_name: text("uniqueName").notNull()
+})
+
+export const getIPv4All = async (
+  { DATABASE: DB, LOSS_THRESHOLD = 10, DELAY_THRESHOLD = 500 }: Bindings,
+) => {
+  const db = drizzle(DB)
+  const rows = await db.select().from(tableIP).all()
+  return rows.map(({ address, loss, delay, name, unique_name }) => {
+    const [ip, port] = address.split(":")
+    return {
+      ip,
+      port: parseInt(port, 10),
+      loss: parseFloat(loss.replaceAll("%", "")),
+      delay: parseInt(delay.replace("ms", ""), 10),
+      name,
+      unique_name,
+    }
+  }).filter(({ loss, delay }) =>
+    loss <= LOSS_THRESHOLD && delay <= DELAY_THRESHOLD)
+}

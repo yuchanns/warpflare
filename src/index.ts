@@ -1,4 +1,4 @@
-import app, { Env } from "./server";
+import app, { Bindings } from "./server";
 
 export default {
   fetch: app.fetch,
@@ -6,5 +6,5 @@ export default {
     switch (event.cron) {
     }
   }
-} satisfies ExportedHandler<Env>
+} satisfies ExportedHandler<{ Bindings: Bindings }>
 

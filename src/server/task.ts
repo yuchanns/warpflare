@@ -1,7 +1,9 @@
 import { Hono } from 'hono'
-import { getCurrentAccount, saveAccount } from '../client/repo'
 import { Bindings } from '.'
-import { generateWireguardKeys, getAccount, register } from '../client'
+import {
+  generateWireguardKeys, getAccount,
+  getCurrentAccount, register, saveAccount
+} from '../client'
 
 const app = new Hono<{ Bindings: Bindings }>()
 

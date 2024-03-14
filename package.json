@@ -5,12 +5,17 @@
   "scripts": {
     "dev": "wrangler dev src/index.ts",
     "deploy": "wrangler deploy --minify src/index.ts",
+    "optimize": "node scripts/gen_entrypoints.js && wrangler d1 execute warp-db --file=./ip.sql",
     "test": "jest --verbose"
   },
   "dependencies": {
+    "@hono/zod-validator": "^0.2.0",
     "@stablelib/x25519": "^1.0.3",
     "drizzle-orm": "^0.29.5",
-    "hono": "^4.0.10"
+    "hono": "^4.0.10",
+    "mmdb-reader": "^1.2.0",
+    "yaml": "^2.4.1",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20240222.0",
@@ -20,7 +25,7 @@
     "jest": "^29.7.0",
     "jest-environment-miniflare": "^2.14.2",
     "miniflare": "^3.20240223.1",
-    "ts-node": "^10.9.2",
+    "uuid": "^9.0.1",
     "wrangler": "^3.31.0"
   }
 }

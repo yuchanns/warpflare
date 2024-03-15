@@ -26,10 +26,10 @@ export const authorize = () => {
 }
 
 const app = new Hono<{ Bindings: Bindings }>()
-  .use(logger(), authorize())
+  .use(logger())
 
 // TODO: friendly homepage
-app.get('/', (c) => c.text('Hello Warp'))
+app.get('/', (c) => c.text('Hello Warp')).use(authorize())
 
 app.route('/task', task)
 app.route('/sub', sub)

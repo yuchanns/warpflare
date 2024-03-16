@@ -2,7 +2,7 @@ import { Hono } from 'hono'
 import { Bindings } from '.'
 import { zValidator } from '@hono/zod-validator'
 import { z } from 'zod'
-import { ProxyFormat, SubType, generateClash, getRandomEntryPoints } from '../utils'
+import { ProxyFormat, SubType, generateClash, generateSingBox, getRandomEntryPoints } from '../utils'
 import { getCurrentAccount, getIPv4All } from '../client'
 import { HTTPException } from 'hono/http-exception'
 
@@ -44,7 +44,7 @@ app.get(
       isAndroid, proxyFormat,
     } = c.req.valid('query')
     // TODO: support IPv6
-    const ips = await getIPv4All(c.env)
+    const ips = await getIPv4All(c.env, randomName)
     const random = getRandomEntryPoints(c.env, ips, best)
     const { private_key: privateKey } = await getCurrentAccount(c.env)
     let data: any
@@ -53,8 +53,12 @@ app.get(
       default:
         throw new HTTPException(400, { message: 'Unsupported sub type' })
       case SubType.Clash:
-        data = generateClash(random, privateKey, proxyFormat, randomName, isAndroid)
+        data = generateClash(random, privateKey, proxyFormat, isAndroid)
         fileName = 'Clash.yaml'
+        break
+      case SubType.SingBox:
+        data = generateSingBox(random, privateKey)
+        fileName = 'SingBox.json'
         break
       // TODO: support others
     }

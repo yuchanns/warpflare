@@ -86,10 +86,12 @@ const tableIP = sqliteTable("IP", {
 
 export const getIPv4All = async (
   { DATABASE: DB, LOSS_THRESHOLD = 10, DELAY_THRESHOLD = 500 }: Bindings,
+  randomName: boolean,
 ) => {
   const db = drizzle(DB)
   const rows = await db.select().from(tableIP).all()
   return rows.map(({ address, loss, delay, name, unique_name }) => {
+    name = randomName ? unique_name : name
     const [ip, port] = address.split(":")
     return {
       ip,
@@ -97,7 +99,6 @@ export const getIPv4All = async (
       loss: parseFloat(loss.replaceAll("%", "")),
       delay: parseInt(delay.replace("ms", ""), 10),
       name,
-      unique_name,
     }
   }).filter(({ loss, delay }) =>
     loss <= LOSS_THRESHOLD && delay <= DELAY_THRESHOLD)

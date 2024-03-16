@@ -18,7 +18,6 @@ export const getRandomEntryPoints = (
     loss: number,
     delay: number,
     name: string,
-    unique_name: string,
   }[],
   best: boolean,
 ) => {

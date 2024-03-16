@@ -5,46 +5,66 @@ export const SING_BOX = {
   "dns": {
     "servers": [
       {
-        "tag": "google",
-        "address": "tls://8.8.8.8"
+        "tag": "dns_proxy",
+        "address": "https://1.1.1.1/dns-query",
+        "address_resolver": "dns_resolver",
+        "strategy": "ipv4_only",
+        "detour": "select"
       },
       {
-        "tag": "local",
+        "tag": "dns_direct",
+        "address": "h3://dns.alidns.com/dns-query",
+        "address_resolver": "dns_resolver",
+        "strategy": "ipv4_only",
+        "detour": "direct"
+      },
+      {
+        "tag": "dns_block",
+        "address": "rcode://refused"
+      },
+      {
+        "tag": "dns_resolver",
         "address": "223.5.5.5",
+        "strategy": "ipv4_only",
         "detour": "direct"
       }
     ],
     "rules": [
       {
         "outbound": "any",
-        "server": "local"
+        "server": "dns_direct"
       },
       {
         "clash_mode": "Direct",
-        "server": "local"
+        "server": "dns_direct"
       },
       {
         "clash_mode": "Global",
-        "server": "google"
+        "server": "dns_proxy"
       },
       {
         "rule_set": "geosite-geolocation-cn",
-        "server": "local"
+        "server": "dns_direct"
       }
     ],
-    "disable_cache": false
+    "disable_cache": false,
+    "final": "dns_proxy"
   },
   "inbounds": [
     {
-      "type": "tun",
-      "inet4_address": "198.18.0.1/30",
-      "inet6_address": "fdfe:dcba:9876::1/126",
-      "mtu": 9000,
-      "auto_route": true,
-      "strict_route": false,
-      "stack": "gvisor",
-      "sniff": true,
-      "sniff_override_destination": true
+      "type": "mixed",
+      "tag": "mixed-in",
+      "listen": "0.0.0.0",
+      "listen_port": 5353,
+      "tcp_fast_open": false,
+      "tcp_multi_path": false,
+      "udp_fragment": false,
+      "udp_timeout": "5m",
+      "sniff": false,
+      "sniff_override_destination": false,
+      "sniff_timeout": "300ms",
+      "domain_strategy": "prefer_ipv4",
+      "udp_disable_domain_unmapping": false
     }
   ],
   "outbounds": [

@@ -16,18 +16,18 @@ app.get(
       best: z.enum(['true', 'false'])
         .nullish()
         .transform((v) => v == 'true'),
-      random_name: z.enum(['true', 'false'])
+      randomName: z.enum(['true', 'false'])
         .nullish()
         .transform((v) => v == 'true'),
-      is_android: z.enum(['true', 'false'])
+      isAndroid: z.enum(['true', 'false'])
         .nullish()
         .transform((v) => v == 'true'),
-      proxy_format: z.enum(['only_proxies', 'with_groups', 'full'])
+      proxyFormat: z.enum(['only_proxies', 'with_groups', 'full'])
         .nullish()
         .transform((v) => v == 'only_proxies' ?
           ProxyFormat.Only : v == 'with_groups' ?
             ProxyFormat.Group : ProxyFormat.Full),
-      sub_type: z.enum(['clash', 'wireguard', 'surge', 'shadowrocket', 'sing-box'])
+      subType: z.enum(['clash', 'wireguard', 'surge', 'shadowrocket', 'sing-box'])
         .nullish()
         .transform((v) => v == 'clash' ?
           SubType.Clash : v == 'wireguard' ?
@@ -40,8 +40,8 @@ app.get(
   ),
   async (c) => {
     const {
-      best, random_name: randomName, sub_type: subType,
-      is_android: isAndroid, proxy_format: proxyFormat,
+      best, randomName, subType,
+      isAndroid, proxyFormat,
     } = c.req.valid('query')
     // TODO: support IPv6
     const ips = await getIPv4All(c.env)

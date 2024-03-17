@@ -3,7 +3,7 @@ import { Bindings } from '.'
 import { zValidator } from '@hono/zod-validator'
 import { z } from 'zod'
 import { ProxyFormat, SubType, generateClash, generateShadowrocket, generateSingBox, getRandomEntryPoints } from '../utils'
-import { getCurrentAccount, getIPv4All } from '../client'
+import { generateDefaultIPv4, getCurrentAccount, getIPv4All } from '../client'
 import { HTTPException } from 'hono/http-exception'
 
 const app = new Hono<{ Bindings: Bindings }>()
@@ -14,7 +14,10 @@ export const sub = async (
   proxyFormat: ProxyFormat, isAndroid: boolean,
 ) => {
   // TODO: support IPv6
-  const ips = await getIPv4All(env, randomName)
+  let ips = await getIPv4All(env, randomName)
+  if (ips.length == 0) {
+    ips = generateDefaultIPv4()
+  }
   const random = getRandomEntryPoints(env, ips, best)
   const { private_key: privateKey } = await getCurrentAccount(env)
   switch (subType) {

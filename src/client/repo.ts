@@ -84,6 +84,22 @@ const tableIP = sqliteTable("IP", {
   unique_name: text("unique_name").notNull()
 })
 
+export const generateDefaultIPv4 = () => {
+  return [
+    { ip: "162.159.192.116", "port": 3854, loss: 0.00, delay: 165, name: "🇺🇸 US-CF-Orange" },
+    { ip: "162.159.192.237", "port": 8742, loss: 0.00, delay: 165, name: "🇺🇸 US-CF-Brown" },
+    { ip: "162.159.195.211", "port": 939, loss: 0.00, delay: 165, name: "🇺🇸 US-CF-Indigo" },
+    { ip: "162.159.195.122", "port": 8742, loss: 0.00, delay: 166, name: "🇺🇸 US-CF-Green" },
+    { ip: "162.159.195.122", "port": 4177, loss: 0.00, delay: 166, name: "🇺🇸 US-CF-Gray" },
+    { ip: "162.159.195.202", "port": 4177, loss: 0.00, delay: 166, name: "🇺🇸 US-CF-Yellow" },
+    { ip: "162.159.195.78", "port": 8742, loss: 0.00, delay: 166, name: "🇺🇸 US-CF-Red" },
+    { ip: "162.159.192.197", "port": 8742, loss: 0.00, delay: 167, name: "🇺🇸 US-CF-White" },
+    { ip: "162.159.195.186", "port": 8742, loss: 0.00, delay: 167, name: "🇺🇸 US-CF-Blue" },
+    { ip: "162.159.195.186", "port": 4177, loss: 0.00, delay: 167, name: "🇺🇸 US-CF-Pink" },
+    { ip: "162.159.195.199", "port": 2408, loss: 0.00, delay: 167, name: "🇺🇸 US-CF-Purple" },
+  ]
+}
+
 export const getIPv4All = async (
   { DATABASE: DB, LOSS_THRESHOLD = 10, DELAY_THRESHOLD = 500 }: Bindings,
   randomName: boolean,

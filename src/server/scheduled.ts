@@ -1,5 +1,5 @@
 import { Bindings } from ".";
-import { getTaskAll } from "../client";
+import { getTaskAll, saveTask } from "../client";
 import { addData, save } from "./task";
 
 export const scheduled: ExportedHandlerScheduledHandler<Bindings> =
@@ -28,6 +28,7 @@ export const scheduled: ExportedHandlerScheduledHandler<Bindings> =
             ok = await save(env)
             break
         }
+        await saveTask(env, name)
         console.log(`Task ${name} proceed: ${ok}`)
       } catch (e) {
         console.error(`Task ${name} panic: ${e}`)

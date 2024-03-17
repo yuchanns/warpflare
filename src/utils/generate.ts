@@ -30,7 +30,7 @@ export const generateClash = (
 ) => {
   const config = Object.assign({}, {
     type: "wireguard",
-    ip: "172.16.0.2",
+    ip: "172.16.0.2/32",
     udp: true,
     mtu: 1280,
     "public-key": CF_PUBLIC_KEY,

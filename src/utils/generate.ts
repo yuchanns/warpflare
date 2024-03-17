@@ -97,6 +97,7 @@ export const generateShadowrocket = (
 ) => {
   const urls = ips.map(({ ip, port, name }) =>
     `wg://[${ip}]:${port}?publicKey=${CF_PUBLIC_KEY}&privateKey=${privateKey}`
-    + `&dns=1.1.1.1,1.0.0.1&ip=172.16.0.2&udp=1&flag=${encodeURIComponent(name)}`)
+    + `&dns=1.1.1.1,1.0.0.1&ip=172.16.0.2&udp=1`
+    + `&flag=${name.split('-')[0].replace(/[^\x00-\x7F]/g, "")}#${encodeURIComponent(name)}`)
   return btoa(urls.join("\n"))
 }

@@ -27,7 +27,13 @@ app.get(
         .transform((v) => v == 'only_proxies' ?
           ProxyFormat.Only : v == 'with_groups' ?
             ProxyFormat.Group : ProxyFormat.Full),
-      subType: z.enum(['clash', 'wireguard', 'surge', 'shadowrocket', 'sing-box'])
+    }),
+  ),
+  zValidator(
+    'header',
+    z.object({
+      "user-agent": z
+        .enum(['clash', 'shadowrocket', 'v2ray', 'quantumult', 'surge', 'sing-box'])
         .nullish()
         .transform((v) => ['clash', 'quantumult'].includes(v ?? '') ?
           SubType.Clash : ['v2ray', 'shadowrocket'].includes(v ?? '') ?
@@ -35,19 +41,19 @@ app.get(
               SubType.Surge : v == 'sing-box' ?
                 SubType.SingBox : SubType.Unknown)
         .default('clash'),
-    }),
-  ),
+    })),
   async (c) => {
     const {
-      best, randomName, subType,
+      best, randomName,
       isAndroid, proxyFormat,
     } = c.req.valid('query')
+    const { 'user-agent': subType } = c.req.valid('header')
     // TODO: support IPv6
     const ips = await getIPv4All(c.env, randomName)
     const random = getRandomEntryPoints(c.env, ips, best)
     const { private_key: privateKey } = await getCurrentAccount(c.env)
-    let data: any
-    let fileName: any
+    let data: string
+    let fileName: string
     switch (subType) {
       default:
         throw new HTTPException(400, { message: 'Unsupported sub type' })
@@ -63,7 +69,7 @@ app.get(
         data = generateShadowrocket(random, privateKey)
         fileName = 'Shadowrocket.conf'
         break
-      // TODO: support others
+      // TODO: other sub types
     }
     return c.newResponse(data, 200, {
       'Content-Disposition': `attachment; filename=${fileName}`

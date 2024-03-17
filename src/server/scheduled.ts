@@ -8,7 +8,7 @@ export const scheduled: ExportedHandlerScheduledHandler<Bindings> =
     const tasks = await getTaskAll(env)
     await Promise.all(tasks.map(async ({ name, triggered_at }) => {
       try {
-        const interval = (Date.now() - Date.parse(triggered_at)) / 1000 / 60
+        const interval = Math.round((Date.now() - Date.parse(triggered_at)) / 1000 / 60)
         console.log(`Task ${name} interval: ${interval} min(s)`)
         let ok
         switch (name) {

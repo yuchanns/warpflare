@@ -8,6 +8,37 @@ import { HTTPException } from 'hono/http-exception'
 
 const app = new Hono<{ Bindings: Bindings }>()
 
+export const sub = async (
+  env: Bindings, randomName: boolean,
+  best: boolean, subType: SubType,
+  proxyFormat: ProxyFormat, isAndroid: boolean,
+) => {
+  // TODO: support IPv6
+  const ips = await getIPv4All(env, randomName)
+  const random = getRandomEntryPoints(env, ips, best)
+  const { private_key: privateKey } = await getCurrentAccount(env)
+  switch (subType) {
+    default:
+      throw new HTTPException(400, { message: 'Unsupported sub type' })
+    case SubType.Clash:
+      return {
+        data: generateClash(random, privateKey, proxyFormat, isAndroid),
+        fileName: 'Clash.yaml'
+      }
+    case SubType.SingBox:
+      return {
+        data: generateSingBox(random, privateKey),
+        fileName: 'SingBox.json'
+      }
+    case SubType.Shadowrocket:
+      return {
+        data: generateShadowrocket(random, privateKey),
+        fileName: 'Shadowrocket.conf'
+      }
+    // TODO: other sub types
+  }
+}
+
 app.get(
   '/',
   zValidator(
@@ -32,14 +63,27 @@ app.get(
   zValidator(
     'header',
     z.object({
-      "user-agent": z
-        .enum(['clash', 'shadowrocket', 'v2ray', 'quantumult', 'surge', 'sing-box'])
+      "user-agent": z.string()
         .nullish()
-        .transform((v) => ['clash', 'quantumult'].includes(v ?? '') ?
-          SubType.Clash : ['v2ray', 'shadowrocket'].includes(v ?? '') ?
-            SubType.Shadowrocket : v == 'surge' ?
-              SubType.Surge : v == 'sing-box' ?
-                SubType.SingBox : SubType.Unknown)
+        .transform((v) => {
+          const agents = v?.split(' ').
+            map(item => item.toLowerCase())
+          for (const agent of agents ?? []) {
+            if (agent.includes('clash') || agent.includes('quantumult')) {
+              return SubType.Clash
+            }
+            if (agent.includes('v2ray') || agent.includes('shadowrocket')) {
+              return SubType.Shadowrocket
+            }
+            if (agent.includes('surge')) {
+              return SubType.Surge
+            }
+            if (agent.includes('sing-box')) {
+              return SubType.SingBox
+            }
+          }
+          return SubType.Unknown
+        })
         .default('clash'),
     })),
   async (c) => {
@@ -48,29 +92,8 @@ app.get(
       isAndroid, proxyFormat,
     } = c.req.valid('query')
     const { 'user-agent': subType } = c.req.valid('header')
-    // TODO: support IPv6
-    const ips = await getIPv4All(c.env, randomName)
-    const random = getRandomEntryPoints(c.env, ips, best)
-    const { private_key: privateKey } = await getCurrentAccount(c.env)
-    let data: string
-    let fileName: string
-    switch (subType) {
-      default:
-        throw new HTTPException(400, { message: 'Unsupported sub type' })
-      case SubType.Clash:
-        data = generateClash(random, privateKey, proxyFormat, isAndroid)
-        fileName = 'Clash.yaml'
-        break
-      case SubType.SingBox:
-        data = generateSingBox(random, privateKey)
-        fileName = 'SingBox.json'
-        break
-      case SubType.Shadowrocket:
-        data = generateShadowrocket(random, privateKey)
-        fileName = 'Shadowrocket.conf'
-        break
-      // TODO: other sub types
-    }
+    const { data, fileName } = await sub(
+      c.env, randomName, best, subType, proxyFormat, isAndroid)
     return c.newResponse(data, 200, {
       'Content-Disposition': `attachment; filename=${fileName}`
     })

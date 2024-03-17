@@ -4,6 +4,7 @@ import { logger } from 'hono/logger'
 import task from './task'
 import sub from './sub'
 import { scheduled } from './scheduled'
+import api from './api'
 
 export type Bindings = {
   DATABASE: D1Database
@@ -33,5 +34,6 @@ app.get('/', (c) => c.text('Hello Warp')).use(authorize())
 
 app.route('/task', task)
 app.route('/sub', sub)
+app.route('/api', api)
 
 export default Object.assign({}, app, { scheduled })

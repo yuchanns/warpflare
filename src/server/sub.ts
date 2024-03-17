@@ -39,50 +39,55 @@ export const sub = async (
   }
 }
 
+export const queryValidator = zValidator(
+  'query',
+  z.object({
+    best: z.enum(['true', 'false'])
+      .nullish()
+      .transform((v) => v == 'true'),
+    randomName: z.enum(['true', 'false'])
+      .nullish()
+      .transform((v) => v == 'true'),
+    proxyFormat: z.enum(['only_proxies', 'with_groups', 'full'])
+      .nullish()
+      .transform((v) => v == 'only_proxies' ?
+        ProxyFormat.Only : v == 'with_groups' ?
+          ProxyFormat.Group : ProxyFormat.Full),
+  }),
+)
+
+const headerValidator = zValidator(
+  'header',
+  z.object({
+    "user-agent": z.string()
+      .nullish()
+      .transform((v) => {
+        const agents = v?.split(' ').
+          map(item => item.toLowerCase())
+        for (const agent of agents ?? []) {
+          if (agent.includes('clash') || agent.includes('quantumult')) {
+            return SubType.Clash
+          }
+          if (agent.includes('v2ray') || agent.includes('shadowrocket')) {
+            return SubType.Shadowrocket
+          }
+          if (agent.includes('surge')) {
+            return SubType.Surge
+          }
+          if (agent.includes('sing-box')) {
+            return SubType.SingBox
+          }
+        }
+        return SubType.Unknown
+      })
+      .default('clash'),
+  }),
+)
+
 app.get(
   '/',
-  zValidator(
-    'query',
-    z.object({
-      best: z.enum(['true', 'false'])
-        .nullish()
-        .transform((v) => v == 'true'),
-      randomName: z.enum(['true', 'false'])
-        .nullish()
-        .transform((v) => v == 'true'),
-      proxyFormat: z.enum(['only_proxies', 'with_groups', 'full'])
-        .nullish()
-        .transform((v) => v == 'only_proxies' ?
-          ProxyFormat.Only : v == 'with_groups' ?
-            ProxyFormat.Group : ProxyFormat.Full),
-    }),
-  ),
-  zValidator(
-    'header',
-    z.object({
-      "user-agent": z.string()
-        .nullish()
-        .transform((v) => {
-          const agents = v?.split(' ').
-            map(item => item.toLowerCase())
-          for (const agent of agents ?? []) {
-            if (agent.includes('clash') || agent.includes('quantumult')) {
-              return SubType.Clash
-            }
-            if (agent.includes('v2ray') || agent.includes('shadowrocket')) {
-              return SubType.Shadowrocket
-            }
-            if (agent.includes('surge')) {
-              return SubType.Surge
-            }
-            if (agent.includes('sing-box')) {
-              return SubType.SingBox
-            }
-          }
-          return SubType.Unknown
-        })
-        .default('clash'),
-    })),
+  queryValidator,
+  headerValidator,
   async (c) => {
     const {
       best, randomName,
@@ -95,6 +100,7 @@ app.get(
     return c.newResponse(data, 200, {
       'Content-Disposition': `attachment; filename=${fileName}`
     })
-  })
+  },
+)
 
 export default app

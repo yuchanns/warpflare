@@ -5,9 +5,8 @@ const CF_PUBLIC_KEY = "bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo="
 
 export enum SubType {
   Clash,
-  Wireguard,
-  Surge,
   Shadowrocket,
+  Surge,
   SingBox,
   Unknown,
 }
@@ -86,4 +85,18 @@ export const generateSingBox = (
     obs.push(...names)
   }
   return JSON.stringify(singBox, null, 2)
+}
+
+export const generateShadowrocket = (
+  ips: {
+    ip: string,
+    port: number,
+    name: string,
+  }[],
+  privateKey: string,
+) => {
+  const urls = ips.map(({ ip, port, name }) =>
+    `wg://[${ip}]:${port}?publicKey=${CF_PUBLIC_KEY}&privateKey=${privateKey}`
+    + `&dns=1.1.1.1,1.0.0.1&ip=172.16.0.2&udp=1&flag=${encodeURIComponent(name)}`)
+  return btoa(urls.join("\n"))
 }

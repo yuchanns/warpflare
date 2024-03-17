@@ -2,7 +2,7 @@ import { Hono } from 'hono'
 import { Bindings } from '.'
 import { zValidator } from '@hono/zod-validator'
 import { z } from 'zod'
-import { ProxyFormat, SubType, generateClash, generateSingBox, getRandomEntryPoints } from '../utils'
+import { ProxyFormat, SubType, generateClash, generateShadowrocket, generateSingBox, getRandomEntryPoints } from '../utils'
 import { getCurrentAccount, getIPv4All } from '../client'
 import { HTTPException } from 'hono/http-exception'
 
@@ -29,12 +29,11 @@ app.get(
             ProxyFormat.Group : ProxyFormat.Full),
       subType: z.enum(['clash', 'wireguard', 'surge', 'shadowrocket', 'sing-box'])
         .nullish()
-        .transform((v) => v == 'clash' ?
-          SubType.Clash : v == 'wireguard' ?
-            SubType.Wireguard : v == 'surge' ?
-              SubType.Surge : v == 'shadowrocket' ?
-                SubType.Shadowrocket : v == 'sing-box' ?
-                  SubType.SingBox : SubType.Unknown)
+        .transform((v) => ['clash', 'quantumult'].includes(v ?? '') ?
+          SubType.Clash : ['v2ray', 'shadowrocket'].includes(v ?? '') ?
+            SubType.Shadowrocket : v == 'surge' ?
+              SubType.Surge : v == 'sing-box' ?
+                SubType.SingBox : SubType.Unknown)
         .default('clash'),
     }),
   ),
@@ -59,6 +58,10 @@ app.get(
       case SubType.SingBox:
         data = generateSingBox(random, privateKey)
         fileName = 'SingBox.json'
+        break
+      case SubType.Shadowrocket:
+        data = generateShadowrocket(random, privateKey)
+        fileName = 'Shadowrocket.conf'
         break
       // TODO: support others
     }

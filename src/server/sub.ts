@@ -50,9 +50,6 @@ app.get(
       randomName: z.enum(['true', 'false'])
         .nullish()
         .transform((v) => v == 'true'),
-      isAndroid: z.enum(['true', 'false'])
-        .nullish()
-        .transform((v) => v == 'true'),
       proxyFormat: z.enum(['only_proxies', 'with_groups', 'full'])
         .nullish()
         .transform((v) => v == 'only_proxies' ?
@@ -89,9 +86,10 @@ app.get(
   async (c) => {
     const {
       best, randomName,
-      isAndroid, proxyFormat,
+      proxyFormat,
     } = c.req.valid('query')
     const { 'user-agent': subType } = c.req.valid('header')
+    const isAndroid = (c.req.header('user-agent') ?? '').includes('android')
     const { data, fileName } = await sub(
       c.env, randomName, best, subType, proxyFormat, isAndroid)
     return c.newResponse(data, 200, {

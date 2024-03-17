@@ -103,3 +103,22 @@ export const getIPv4All = async (
   }).filter(({ loss, delay }) =>
     loss <= LOSS_THRESHOLD && delay <= DELAY_THRESHOLD)
 }
+
+const tableTask = sqliteTable("Task", {
+  name: text("name").primaryKey(),
+  triggered_at: text("triggered_at").notNull(),
+})
+
+export const getTaskAll = async ({ DATABASE: DB }: Bindings) => {
+  const db = drizzle(DB)
+  const rows = await db.select().from(tableTask).all()
+  return rows.map(({ name, triggered_at }) => ({ name, triggered_at }))
+}
+
+export const saveTask = async ({ DATABASE: DB }: Bindings, name: string) => {
+  const db = drizzle(DB)
+  const triggered_at = new Date().toISOString().replace("T", " ").substring(0, 19)
+  return await db.update(tableTask)
+    .set({ triggered_at })
+    .where(eq(tableTask.name, name))
+}

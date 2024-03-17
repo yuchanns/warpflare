@@ -1,28 +1,36 @@
 import { Bindings } from ".";
+import { getTaskAll } from "../client";
 import { addData, save } from "./task";
 
 export const scheduled: ExportedHandlerScheduledHandler<Bindings> =
-  async (event, env, _ctx) => {
-    console.log(env)
-    switch (event.cron) {
-      case "*/5 * * * *": // every five minute
-        try {
-          const ok = await addData(env)
-          console.log(`Trigger proceed: ${ok}`)
-
-        } catch (e) {
-          console.error(`Trigger panic: ${e}`)
+  async (_event, env, _ctx) => {
+    const { GET_DATA_INTERVAL = 5, SAVE_ACCOUNT_INTERVAL = 10 } = env
+    const tasks = await getTaskAll(env)
+    await Promise.all(tasks.map(async ({ name, triggered_at }) => {
+      try {
+        const interval = (Date.now() - Date.parse(triggered_at)) / 1000 / 60
+        console.log(`Task ${name} interval: ${interval} min(s)`)
+        let ok
+        switch (name) {
+          default:
+            console.error(`Unknown task: ${name}`)
+            return
+          case 'add-data':
+            if (interval < GET_DATA_INTERVAL) {
+              return
+            }
+            ok = await addData(env)
+            break
+          case "save-account":
+            if (interval < SAVE_ACCOUNT_INTERVAL) {
+              return
+            }
+            ok = await save(env)
+            break
         }
-        break
-      case "*/10 * * * *": // every ten minute
-        try {
-          const ok = await save(env)
-          console.log(`Trigger proceed: ${ok}`)
-        } catch (e) {
-          console.error(`Trigger panic: ${e}`)
-        }
-        break
-      default:
-        console.error(`Unknown trigger: ${event.cron}`)
-    }
+        console.log(`Task ${name} proceed: ${ok}`)
+      } catch (e) {
+        console.error(`Task ${name} panic: ${e}`)
+      }
+    }))
   }

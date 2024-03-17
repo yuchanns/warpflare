@@ -9,7 +9,6 @@ database_id = "4ca7dbc7-74ff-42be-9f86-965dfed62ad7"
 
 [triggers]
 crons = [
-    '*/5 * * * *', # every five minute
-    '*/10 * * * *' # every ten minute
+    '* * * * *', # every minute
 ]
 

@@ -12,6 +12,7 @@ export type Bindings = {
   DELAY_THRESHOLD: number
   RANDOM_COUNT: number
   SECRET_KEY: string
+  BOT_TOKEN: string
   GET_DATA_INTERVAL: number
   SAVE_ACCOUNT_INTERVAL: number
 }

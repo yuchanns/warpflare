@@ -20,8 +20,23 @@ jobs:
         packageManager: pnpm
         apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        postCommands: |
+          # Create sqlite tables if not exists
+          wrangler d1 execute warp-db --file=./schema.sql
         secrets: |
           SECRET_KEY
+          BOT_TOKEN
+          LOSS_THRESHOLD
+          DELAY_THRESHOLD
+          RANDOM_COUNT
+          GET_DATA_INTERVAL
+          SAVE_ACCOUNT_INTERVAL
       env:
         SECRET_KEY: ${{ secrets.SECRET_KEY }}
+        BOT_TOKEN: ${{ secrets.BOT_TOKEN || '' }}
+        LOSS_THRESHOLD: ${{ secrets.LOSS_THRESHOLD || 10 }}
+        DELAY_THRESHOLD: ${{ secrets.DELAY_THRESHOLD || 500 }}
+        RANDOM_COUNT: ${{ secrets.RANDOM_COUNT || 10 }}
+        GET_DATA_INTERVAL: ${{ secrets.GET_DATA_INTERVAL || 2 }}
+        SAVE_ACCOUNT_INTERVAL: ${{ secrets.SAVE_ACCOUNT_INTERVAL || 10 }}
 

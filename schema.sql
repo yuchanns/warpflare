@@ -22,11 +22,11 @@ CREATE TABLE IF NOT EXISTS IP (
 );
 
 CREATE TABLE IF NOT EXISTS Task (
-    name TEXT,
+    name TEXT PRIMARY KEY,
     triggered_at DATETIME
 );
 
-INSERT INTO Task (name, triggered_at)
+INSERT OR IGNORE INTO Task (name, triggered_at)
 VALUES
 	("add-data", CURRENT_TIMESTAMP),
 	("save-account", CURRENT_TIMESTAMP);

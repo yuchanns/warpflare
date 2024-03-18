@@ -20,14 +20,14 @@ This project is inspired by [WARP-CLASH](https://github.com/vvbbnn00/WARP-Clash-
 ## Instructions
 To get started, follow these steps:
 
-1. Fork this project.
-2. Add three required secrets to `Settings > Security > Secrets and variables > Actions > Repository Secrets > New repository secrets`:
+1. **Fork** this project.
+2. Add **three** required secrets to `Settings > Security > Secrets and variables > Actions > Repository Secrets > New repository secrets`:
     - `CLOUDFLARE_ACCOUNT_ID`: Find your account ID using the [instructions here](https://developers.cloudflare.com/fundamentals/setup/find-account-and-zone-ids/).
     - `CLOUDFLARE_API_TOKEN`: Create this token with the `Edit Cloudflare Workers` template and permission of `D1 Edit` included. See image below for reference:
         ![api token](https://github.com/yuchanns/warpflare/assets/25029451/89da63d6-6db4-4320-8d63-46b8fd11fe8d)
     - `SECRET_KEY`: Choose any value for authorizing access to the subscription URL.
 
-3. Go to `Actions > Deploy` and manually run the workflow by clicking `Run workflow`.
+3. Go to `Actions > Deploy` and manually run the workflow by clicking `Run workflow`. The firs deploy might be failed, please retry.
 4. Find the route for your worker in your Cloudflare dashboard under `Workers & Pages`.
 5. Assuming the route is `warp.xxx.workers.dev`, you can access the subscription using:
     - `https://warp.xxx.workers.dev/sub?token=${SECRET_KEY}&proxyFormat=full&randomName=true&best=true`: detect the subscription type based on user-agent.
@@ -40,7 +40,7 @@ The available parameters are shown in the table below:
 |subType|clash, quantumult, v2ray, shadowrocket, sing-box|**PR**s are welcome|
 |proxyFormat|only_proxies, with_groups, full|only for clash|
 
-You can control the worker behavior using the following environment variables:
+You can control the worker behavior using the following environment variables (**not** secrets):
 
 |Name|Default|Description|
 |---|---|---|

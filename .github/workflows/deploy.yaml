@@ -15,11 +15,20 @@ jobs:
       with:
           version: latest
           run_install: false
+    - uses: awalsh128/cache-apt-pkgs-action@latest
+      with:
+        packages: jq
+        version: 1.0
     - uses: cloudflare/wrangler-action@v3
       with:
         packageManager: pnpm
         apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        preCommands: |
+          # Check if database is created
+          pnpm add -g wrangler
+          [ -n "$(wrangler d1 list --json | jq '.[] | select(.name=="warp-db") | .uuid' | tr -d '\n"')" ] || wrangler d1 create warp-db
+          sed -i -e "s/4ca7dbc7-74ff-42be-9f86-965dfed62ad7/$(wrangler d1 list --json | jq '.[] | select(.name=="warp-db") | .uuid' | tr -d '\n"')/g" wrangler.toml
         postCommands: |
           # Create sqlite tables if not exists
           wrangler d1 execute warp-db --file=./schema.sql

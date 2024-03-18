@@ -41,9 +41,9 @@ jobs:
           SAVE_ACCOUNT_INTERVAL
       env:
         SECRET_KEY: ${{ secrets.SECRET_KEY }}
-        LOSS_THRESHOLD: ${{ secrets.LOSS_THRESHOLD || 10 }}
-        DELAY_THRESHOLD: ${{ secrets.DELAY_THRESHOLD || 500 }}
-        RANDOM_COUNT: ${{ secrets.RANDOM_COUNT || 10 }}
-        GET_DATA_INTERVAL: ${{ secrets.GET_DATA_INTERVAL || 2 }}
-        SAVE_ACCOUNT_INTERVAL: ${{ secrets.SAVE_ACCOUNT_INTERVAL || 10 }}
+        LOSS_THRESHOLD: ${{ vars.LOSS_THRESHOLD || 10 }}
+        DELAY_THRESHOLD: ${{ vars.DELAY_THRESHOLD || 500 }}
+        RANDOM_COUNT: ${{ vars.RANDOM_COUNT || 10 }}
+        GET_DATA_INTERVAL: ${{ vars.GET_DATA_INTERVAL || 2 }}
+        SAVE_ACCOUNT_INTERVAL: ${{ vars.SAVE_ACCOUNT_INTERVAL || 10 }}
 

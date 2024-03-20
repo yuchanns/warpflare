@@ -20,7 +20,7 @@ This project is inspired by [WARP-CLASH](https://github.com/vvbbnn00/WARP-Clash-
 ## Instructions
 To get started, follow these steps:
 
-1. **Fork** this project.
+1. **Fork** this project by [![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/yuchanns/warpflare).
 2. Add **three** required secrets to `Settings > Security > Secrets and variables > Actions > Repository Secrets > New repository secrets`:
     - `CLOUDFLARE_ACCOUNT_ID`: Find your account ID using the [instructions here](https://developers.cloudflare.com/fundamentals/setup/find-account-and-zone-ids/).
     - `CLOUDFLARE_API_TOKEN`: Create this token with the `Edit Cloudflare Workers` template and permission of `D1 Edit` included. See image below for reference:

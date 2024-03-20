@@ -16,13 +16,17 @@ export const scheduled: ExportedHandlerScheduledHandler<Bindings> =
             console.error(`Unknown task: ${name}`)
             return
           case 'add-data':
+            console.log(`GET_DATA_INTERVAL: ${GET_DATA_INTERVAL}`)
             if (interval < GET_DATA_INTERVAL) {
+              console.warn(`Task ${name} suspend`)
               return
             }
             ok = await addData(env)
             break
           case "save-account":
+            console.log(`SAVE_ACCOUNT_INTERVAL: ${SAVE_ACCOUNT_INTERVAL}`)
             if (interval < SAVE_ACCOUNT_INTERVAL) {
+              console.warn(`Task ${name} suspend`)
               return
             }
             ok = await save(env)

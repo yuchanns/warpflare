@@ -10,6 +10,9 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    permissions:
+      actions: write
+      contents: read
     steps:
     - uses: actions/checkout@v4
     - uses: pnpm/action-setup@v3
@@ -49,4 +52,11 @@ jobs:
         GET_DATA_INTERVAL: ${{ vars.GET_DATA_INTERVAL || 2 }}
         SAVE_ACCOUNT_INTERVAL: ${{ vars.SAVE_ACCOUNT_INTERVAL || 10 }}
         RESET_ACCOUNT_INTERVAL: ${{ vars.RESET_ACCOUNT_INTERVAL || 2880 }}
+    - name: Delete workflow runs
+      uses: Mattraks/delete-workflow-runs@v2
+      with:
+        token: ${{ github.token }}
+        repository: ${{ github.repository }}
+        retain_days: 1
+        keep_minimum_runs: 2
 

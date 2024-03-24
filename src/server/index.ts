@@ -15,6 +15,7 @@ export type Bindings = {
   BOT_TOKEN: string
   GET_DATA_INTERVAL: number
   SAVE_ACCOUNT_INTERVAL: number
+  RESET_ACCOUNT_INTERVAL: number
 }
 
 export const authorize = () => {

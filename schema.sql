@@ -29,4 +29,5 @@ CREATE TABLE IF NOT EXISTS Task (
 INSERT OR IGNORE INTO Task (name, triggered_at)
 VALUES
 	("add-data", CURRENT_TIMESTAMP),
-	("save-account", CURRENT_TIMESTAMP);
+	("save-account", CURRENT_TIMESTAMP),
+	("reset-account", CURRENT_TIMESTAMP);

@@ -21,6 +21,38 @@ const tableAccount = sqliteTable("Account", {
   usage: integer("usage").notNull(),
 })
 
+export const resetCurrentAccount = async (
+  { DATABASE: DB }: Bindings,
+  accountId: string,
+) => {
+  console.log("Reset current account")
+  const db = drizzle(DB)
+  // NOTE: To register a brand new account, an old pubKey cannot be used as
+  // doing so will result in an Unauthorized error.
+  // Therefore, it is necessary to regenerate the key pair.
+  const { pubKey, privKey } = generateWireguardKeys()
+  const result = await register(pubKey)
+  const account = {
+    account_id: result.id,
+    account_type: result.type,
+    created_at: result.account.created,
+    updated_at: result.account.updated,
+    model: result.model,
+    referrer: "",
+    private_key: privKey,
+    license_key: result.account.license,
+    token: result.token,
+    premium_data: result.account.premium_data,
+    quota: result.account.quota ?? 0,
+    usage: result.account.usage ?? 0,
+  }
+  await db.update(tableAccount)
+    .set(account).where(
+      eq(tableAccount.account_id, accountId),
+    )
+  return account
+}
+
 export const getCurrentAccount = async ({ DATABASE: DB }: Bindings) => {
   console.log("Get current account")
   // FIXME: construct db from context

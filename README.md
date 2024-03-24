@@ -49,6 +49,15 @@ You can control the worker behavior using the following environment variables (*
 |RANDOM_COUNT|The number of nodes|10|
 |GET_DATA_INTERVAL|2|Interval for replenishing `WARP+` traffic (min)|
 |SAVE_ACCOUNT_INTERVAL|10|Interval for dropping accounts (min)|
+|RESET_ACCOUNT_INTERVAL|2880|Interval for resetting accounts (min)|
+
+**Why do I need to reset the account?**
+
+If you replenish your traffic excessively using an account, Cloudflare will reject your request and
+you will receive an error 426 which represents that you have sent too many requests.
+Simply proxying your requests will not solve the issue as the limitation is account-specific.
+Therefore, you need to reset your account.
+After resetting your account, please refresh your subscription to obtain the updated private key.
 
 ## Optimization
 

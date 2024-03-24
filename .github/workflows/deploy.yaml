@@ -40,6 +40,7 @@ jobs:
           RANDOM_COUNT
           GET_DATA_INTERVAL
           SAVE_ACCOUNT_INTERVAL
+          RESET_ACCOUNT_INTERVAL
       env:
         SECRET_KEY: ${{ secrets.SECRET_KEY }}
         LOSS_THRESHOLD: ${{ vars.LOSS_THRESHOLD || 10 }}
@@ -47,4 +48,5 @@ jobs:
         RANDOM_COUNT: ${{ vars.RANDOM_COUNT || 10 }}
         GET_DATA_INTERVAL: ${{ vars.GET_DATA_INTERVAL || 2 }}
         SAVE_ACCOUNT_INTERVAL: ${{ vars.SAVE_ACCOUNT_INTERVAL || 10 }}
+        RESET_ACCOUNT_INTERVAL: ${{ vars.RESET_ACCOUNT_INTERVAL || 2880 }}
 

@@ -1,10 +1,12 @@
-import { generateWireguardKeys, getAccount, register } from "./index"
+import { generateWireguardKeys, getAccount, getPubKey, register } from "./index"
 
 describe("wireguard", () => {
   test("generateWireguardKeys", async () => {
     const { pubKey, privKey } = generateWireguardKeys()
     expect(pubKey).toBeTruthy()
     expect(privKey).toBeTruthy()
+    const anotherPubkey = getPubKey(privKey)
+    expect(anotherPubkey).toEqual(pubKey)
   })
 })
 

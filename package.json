@@ -25,6 +25,7 @@
     "jest": "^29.7.0",
     "jest-environment-miniflare": "^2.14.2",
     "miniflare": "^3.20240223.1",
+    "ts-node": "^10.9.2",
     "uuid": "^9.0.1",
     "wrangler": "^3.31.0"
   }

@@ -25,7 +25,7 @@ export const generateClash = (
   }[],
   privateKey: string,
   proxyFormat: ProxyFormat = ProxyFormat.Full,
-  isAndroid: boolean,
+  _isAndroid: boolean,
 ) => {
   const config = Object.assign({}, {
     type: "wireguard",
@@ -35,11 +35,12 @@ export const generateClash = (
     "public-key": CF_PUBLIC_KEY,
     "remote-dns-resolve": true,
     "private-key": privateKey,
-  }, isAndroid ? {} : { dns: ['1.1.1.1', '1.0.0.1'] })
+  })
   const proxies = ips
     .map(({ ip: server, port, name }) =>
       Object.assign({}, { server, name, port }, config))
-  const clash = Object.assign({}, structuredClone(CLASH), { proxies })
+  const clash = Object.assign({}, structuredClone(CLASH), { proxies: structuredClone(proxies) })
+  clash["proxy-groups"][1] = Object.assign({}, clash["proxy-groups"][1], { proxies: structuredClone(proxies) })
   if (proxyFormat == ProxyFormat.Only) {
     return YAML.stringify({ "proxies": clash.proxies })
   } else if (proxyFormat == ProxyFormat.Group) {

@@ -13,7 +13,6 @@ export const sub = async (
   best: boolean, subType: SubType,
   proxyFormat: ProxyFormat, isAndroid: boolean,
 ) => {
-  // TODO: support IPv6
   let ips = await getIPAll(env, randomName)
   if (ips.length == 0) {
     ips = generateDefaultIPv4()

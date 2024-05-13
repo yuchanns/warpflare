@@ -153,14 +153,13 @@ export const getIPAll = async (
 }
 
 function splitIpPort(address: string): [string, string] {
-  // 首先检查是否IPv6
+  // check if the address is IPv6
   const bracketRegex = /^\[(.*?)]:(\d+)$/;
   const v6match = address.match(bracketRegex);
   if (v6match) {
     return [v6match[1], v6match[2]];
   }
 
-  // 否则，将地址视为IPv4
   const [ip, port] = address.split(":");
   return [ip, port];
 }

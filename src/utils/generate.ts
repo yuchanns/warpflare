@@ -40,7 +40,8 @@ export const generateClash = (
     .map(({ ip: server, port, name }) =>
       Object.assign({}, { server, name, port }, config))
   const clash = Object.assign({}, structuredClone(CLASH), { proxies: structuredClone(proxies) })
-  clash["proxy-groups"][1] = Object.assign({}, clash["proxy-groups"][1], { proxies: structuredClone(proxies) })
+  clash["proxy-groups"][1] = Object.assign({}, clash["proxy-groups"][1],
+    { proxies: structuredClone(proxies.map(({ name }) => name)) })
   if (proxyFormat == ProxyFormat.Only) {
     return YAML.stringify({ "proxies": clash.proxies })
   } else if (proxyFormat == ProxyFormat.Group) {

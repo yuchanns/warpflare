@@ -134,7 +134,7 @@ export const generateDefaultIPv4 = () => {
 
 export const getIPAll = async (
   { DATABASE: DB, LOSS_THRESHOLD = 10, DELAY_THRESHOLD = 500 }: Bindings,
-  randomName: boolean,
+  randomName: boolean, ipv6: boolean,
 ) => {
   const db = drizzle(DB)
   const rows = await db.select().from(tableIP).all()
@@ -150,6 +150,7 @@ export const getIPAll = async (
     }
   }).filter(({ loss, delay }) =>
     loss <= LOSS_THRESHOLD && delay <= DELAY_THRESHOLD)
+    .filter(({ ip }) => ipv6 || !ip.includes(":"))
 }
 
 function splitIpPort(address: string): [string, string] {

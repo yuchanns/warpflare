@@ -26,12 +26,12 @@ app.get('/:subType',
   async (c) => {
     const {
       best, randomName,
-      proxyFormat,
+      proxyFormat, ipv6,
     } = c.req.valid('query')
     const { subType } = c.req.valid('param')
     const isAndroid = (c.req.header('user-agent') ?? '').includes('android')
     const { data, fileName } = await sub(
-      c.env, randomName, best, subType, proxyFormat, isAndroid)
+      c.env, randomName, best, subType, proxyFormat, isAndroid, ipv6)
     return c.newResponse(data, 200, {
       'Content-Disposition': `attachment; filename=${fileName}`
     })

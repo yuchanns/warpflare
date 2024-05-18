@@ -11,9 +11,9 @@ const app = new Hono<{ Bindings: Bindings }>()
 export const sub = async (
   env: Bindings, randomName: boolean,
   best: boolean, subType: SubType,
-  proxyFormat: ProxyFormat, isAndroid: boolean,
+  proxyFormat: ProxyFormat, isAndroid: boolean, ipv6: boolean,
 ) => {
-  let ips = await getIPAll(env, randomName)
+  let ips = await getIPAll(env, randomName, ipv6)
   if (ips.length == 0) {
     ips = generateDefaultIPv4()
   }
@@ -55,6 +55,9 @@ export const queryValidator = zValidator(
       .transform((v) => v == 'only_proxies' ?
         ProxyFormat.Only : v == 'with_groups' ?
           ProxyFormat.Group : ProxyFormat.Full),
+    ipv6: z.enum(['true', 'false'])
+      .nullish()
+      .transform((v) => v == 'true'),
   }),
 )
 
@@ -93,12 +96,12 @@ app.get(
   async (c) => {
     const {
       best, randomName,
-      proxyFormat,
+      proxyFormat, ipv6,
     } = c.req.valid('query')
     const { 'user-agent': subType } = c.req.valid('header')
     const isAndroid = (c.req.header('user-agent') ?? '').includes('android')
     const { data, fileName } = await sub(
-      c.env, randomName, best, subType, proxyFormat, isAndroid)
+      c.env, randomName, best, subType, proxyFormat, isAndroid, ipv6)
     return c.newResponse(data, 200, {
       'Content-Disposition': `attachment; filename=${fileName}`
     })
